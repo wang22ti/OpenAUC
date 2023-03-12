@@ -25,7 +25,7 @@ All the outputs are stored in the folder `log` with a unique id.
 @InProceedings{openauc,
     title = {OpenAUC: Towards AUC-Oriented Open-Set Recognition},
     author = {Zitai Wang and  Qianqian Xu and Zhiyong Yang and Yuan He and Xiaochun Cao and Qingming Huang},
-    booktitle = {International Conference on Learning Representations},
+    booktitle = {Annual Conference on Neural Information Processing Systems},
     year = {2022},
 }
 ```
