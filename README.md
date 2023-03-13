@@ -15,8 +15,7 @@ The datasets can be found in the README of [Open-Set Recognition: a Good Closed-
 
 Please put pre-trained models in the folder `models`. And all the outputs will be stored in the folder `log` with a unique id.
 
-We provide the bash script in the folder `bash_scripts` for the experiments on the *CUB* and *svhn* datasets. Note that the value of $\lambda$ is different from that descirbed in the paper due to the reconstruction of the code. And we follow the traditional assumption that $\forall c \in Y_k, \mathbb{P}[y = c \mid x]$ and $r(x) \propto 1 / \max_{k \in Y_k} f(x)_k$, which shows similar performances as those reported in our paper.
-
+We provide the bash script in the folder `bash_scripts` for the experiments on the *CUB* and *svhn* datasets. Note that the value of $\lambda$ is slightly different from that descirbed in the paper due to the reconstruction of the code. And here we follow the traditional assumption that $\forall c \in Y_k, \mathbb{P}[y = c \mid x]$ and $r(x) \propto 1 / \max_{k \in Y_k} f(x)_k$, which shows similar performances as those reported in our paper.
 
 
 ## Citation
