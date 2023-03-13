@@ -1,4 +1,3 @@
-import torch
 from torch import nn
 
 class classifier32(nn.Module):
@@ -40,50 +39,52 @@ class classifier32(nn.Module):
         self.dr2 = nn.Dropout2d(0.2)
         self.dr3 = nn.Dropout2d(0.2)
 
+        self.pre = nn.Sequential(
+            self.dr1,
+            self.conv1,
+            self.bn1,
+            nn.LeakyReLU(0.2),
+            self.conv2,
+            self.bn2,
+            nn.LeakyReLU(0.2),
+            self.conv3,
+            self.bn3,
+            nn.LeakyReLU(0.2),
+
+            self.dr2,
+            self.conv4,
+            self.bn4,
+            nn.LeakyReLU(0.2),
+            self.conv5,
+            self.bn5,
+            nn.LeakyReLU(0.2),
+            self.conv6,
+            self.bn6,
+            nn.LeakyReLU(0.2),
+            self.dr3,
+            self.conv7,
+            self.bn7,
+            nn.LeakyReLU(0.2),
+            self.conv8,
+            self.bn8,
+            nn.LeakyReLU(0.2),
+
+            self.conv9,
+            self.bn9,
+            nn.LeakyReLU(0.2),
+            self.avgpool,
+            nn.Flatten(1),
+        )
+
+        self.post = self.fc
+
         self.apply(weights_init)
         self.cuda()
 
-    def forward(self, x, return_feature=False):
-        x = self.dr1(x)
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = nn.LeakyReLU(0.2)(x)
-        x = self.conv2(x)
-        x = self.bn2(x)
-        x = nn.LeakyReLU(0.2)(x)
-        x = self.conv3(x)
-        x = self.bn3(x)
-        x = nn.LeakyReLU(0.2)(x)
-
-        x = self.dr2(x)
-        x = self.conv4(x)
-        x = self.bn4(x)
-        x = nn.LeakyReLU(0.2)(x)
-        x = self.conv5(x)
-        x = self.bn5(x)
-        x = nn.LeakyReLU(0.2)(x)
-        x = self.conv6(x)
-        x = self.bn6(x)
-        x = nn.LeakyReLU(0.2)(x)
-
-        x = self.dr3(x)
-        x = self.conv7(x)
-        x = self.bn7(x)
-        x = nn.LeakyReLU(0.2)(x)
-        x = self.conv8(x)
-        x = self.bn8(x)
-        x = nn.LeakyReLU(0.2)(x)
-        x = self.conv9(x)
-        x = self.bn9(x)
-        x = nn.LeakyReLU(0.2)(x)
-
-        x = self.avgpool(x)
-        x = torch.flatten(x, 1)
-        y = self.fc(x)
-        if return_feature:
-            return x, y
-        else:
-            return y
+    def forward(self, x, return_embedding=True):
+        embedding = self.pre(x)
+        preds = self.post(embedding)
+        return embedding, preds if return_embedding else preds
 
 def weights_init(m):
     classname = m.__class__.__name__

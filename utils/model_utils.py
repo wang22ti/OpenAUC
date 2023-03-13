@@ -1,6 +1,5 @@
 import timm
 import torch
-import argparse
 import os.path as osp
 from functools import partial
 
@@ -21,8 +20,8 @@ def transform_moco_state_dict_places(obj, num_classes, supervised=False):
     if supervised:
 
         new_model = obj
-        new_model['fc.weight'] = torch.randn((len(args.train_classes), 2048))
-        new_model['fc.bias'] = torch.randn((len(args.train_classes),))
+        new_model['fc.weight'] = torch.randn((num_classes, 2048))
+        new_model['fc.bias'] = torch.randn((num_classes,))
 
     else:
 

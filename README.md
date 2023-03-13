@@ -8,16 +8,16 @@ Our codes are based on the repositories [Open-Set Recognition: a Good Closed-Set
 ## Dependencies
 Please refer to the `requirements.yml` in the root folder.
 
-## Train and test
-The datasets can be found in the README of [Open-Set Recognition: a Good Closed-Set Classifier is All You Need?](https://github.com/sgvaze/osr_closed_set_all_you_need).
-
-Please put pre-trained models in the folder `models`.
-
+## Settings
 The parameters are stored in the file `utils/config.py`.
 
-We provide the bash script in the folder `bash_scripts` for the experiments on the CUB dataset.
+The datasets can be found in the README of [Open-Set Recognition: a Good Closed-Set Classifier is All You Need?](https://github.com/sgvaze/osr_closed_set_all_you_need). After downloading the datasets, please put them in the folder `data`.
 
-All the outputs are stored in the folder `log` with a unique id.
+Please put pre-trained models in the folder `models`. And all the outputs will be stored in the folder `log` with a unique id.
+
+We provide the bash script in the folder `bash_scripts` for the experiments on the *CUB* and *svhn* datasets. Note that the value of $\lambda$ is different from that descirbed in the paper due to the reconstruction of the code. And we follow the traditional assumption that $\forall c \in Y_k, \mathbb{P}[y = c \mid x]$ and $r(x) \propto 1 / \max_{k \in Y_k} f(x)_k$, which shows similar performances as those reported in our paper.
+
+
 
 ## Citation
 

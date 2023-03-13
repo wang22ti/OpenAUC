@@ -2,16 +2,14 @@ import os
 import argparse
 import datetime
 import time
-import pandas as pd
 import importlib
-import numpy as np
 from tqdm import tqdm
 
 import torch
 from torch.utils.data import DataLoader
 import torch.backends.cudnn as cudnn
 
-from models.wrapper_classes import TimmResNetWrapper
+from models.wrapper_classes import TimmResNetWrapper, Classifier32Wrapper
 from data.open_set_datasets import get_class_splits, get_datasets
 from loss.OpenAUCLoss import OpenAUCLoss
 from utils.utils import AverageMeter, init_experiment, seed_torch, str2bool
@@ -26,15 +24,15 @@ parser = argparse.ArgumentParser("Training")
 # Dataset
 parser.add_argument('--dataset', type=str, default='cub', help="")
 parser.add_argument('--out-num', type=int, default=10, help='For cifar-10-100')
-parser.add_argument('--image_size', type=int, default=448)
+parser.add_argument('--image_size', type=int, default=64)
 
 # optimization
 parser.add_argument('--optim', type=str, default=None, help="Which optimizer to use {adam, sgd}")
-parser.add_argument('--batch_size', type=int, default=32)
+parser.add_argument('--batch_size', type=int, default=128)
 parser.add_argument('--lr', type=float, default=0.1, help="learning rate for model")
 parser.add_argument('--weight_decay', type=float, default=1e-4, help="LR regularisation on weights")
 parser.add_argument('--max-epoch', type=int, default=600)
-parser.add_argument('--scheduler', type=str, default='cosine_warm_restarts_warmup')
+parser.add_argument('--scheduler', type=str, default='cosine_warm_restarts')
 parser.add_argument('--num_restarts', type=int, default=2, help='How many restarts for cosine_warm_restarts schedule')
 
 # model
@@ -43,13 +41,13 @@ parser.add_argument('--openauc', default=True, type=str2bool, metavar='BOOL')
 parser.add_argument('--alpha', type=float, default=2, help="parameter for openauc loss")
 parser.add_argument('--lambda', type=float, default=0.1, help="parameter for openauc loss")
 
-parser.add_argument('--label_smoothing', type=float, default=0.3, help="Smoothing constant for label smoothing.")
+parser.add_argument('--label_smoothing', type=float, default=None, help="Smoothing constant for label smoothing.")
 parser.add_argument('--temp', type=float, default=1.0, help="temp for label_smoothing")
-parser.add_argument('--model', type=str, default='timm_resnet50_pretrained')
+parser.add_argument('--model', type=str, default='classifier32')
 parser.add_argument('--resnet50_pretrain', type=str, default='places_moco',
                         help='Which pretraining to use if --model=timm_resnet50_pretrained.'
                              'Options are: {iamgenet_moco, places_moco, places}', metavar='BOOL')
-parser.add_argument('--feat_dim', type=int, default=2048, help="Feature vector dim, only for classifier32 at the moment")
+parser.add_argument('--feat_dim', type=int, default=128, help="Feature vector dim, only for classifier32 at the moment")
 
 # aug
 parser.add_argument('--transform', type=str, default='rand-augment')
@@ -92,7 +90,7 @@ def train(net, criterion, optimizer, trainloader, epoch=None, **options):
             embedding, logits = net(data, True)
 
             if options['openauc']:
-                _, loss = criterion(logits, labels, net.resnet.fc, embedding)
+                _, loss = criterion(logits, labels, net.net.fc, embedding)
             else:
                 _, loss = criterion(logits, labels)
 
@@ -150,7 +148,7 @@ def main_worker(options, args):
     if args.model == 'timm_resnet50_pretrained':
         wrapper_class = TimmResNetWrapper
     else:
-        wrapper_class = None
+        wrapper_class = Classifier32Wrapper
     net = get_model(args, wrapper_class=wrapper_class)
     feat_dim = args.feat_dim
 

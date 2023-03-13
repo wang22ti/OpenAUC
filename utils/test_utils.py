@@ -3,7 +3,6 @@ import numpy as np
 import os
 
 from sklearn.metrics import roc_curve, roc_auc_score, accuracy_score, average_precision_score
-import sklearn.metrics._ranking
 
 from tqdm import tqdm
 
@@ -284,7 +283,7 @@ class EnsembleModel(ModelTemplate):
         self.use_softmax = use_softmax
 
     def forward(self, imgs):
-        _, closed_set_preds = self.model(imgs, False)
+        _, closed_set_preds = self.model(imgs, True)
         if self.use_softmax:
             closed_set_preds = torch.nn.Softmax(dim=-1)(closed_set_preds)
 

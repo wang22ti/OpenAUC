@@ -3,15 +3,13 @@ from utils.utils import strip_state_dict
 
 import torch
 import argparse
-import numpy as np
 import pickle
 
 from torch.utils.data import DataLoader
 from data.open_set_datasets import get_datasets
 from utils.model_utils import get_model
-import sys, os
+import os
 
-from utils.utils import str2bool
 from models.wrapper_classes import TimmResNetWrapper
 from utils.config import save_dir, osr_split_dir, root_model_path
 
