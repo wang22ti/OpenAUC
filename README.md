@@ -26,5 +26,6 @@ We provide the bash script in the folder `bash_scripts` for the experiments on t
     author = {Zitai Wang and  Qianqian Xu and Zhiyong Yang and Yuan He and Xiaochun Cao and Qingming Huang},
     booktitle = {Annual Conference on Neural Information Processing Systems},
     year = {2022},
+    pages = {25033--25045}
 }
 ```
